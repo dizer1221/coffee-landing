@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кофейня «Зерно» — кофе и выпечка</title>
+  <meta name="description" content="Кофейня «Зерно»: своя обжарка, свежая выпечка каждое утро и уютная атмосфера.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Цвета и базовые настройки ===== */
+    :root {
+      --bg: #F7F2EB;        /* кремовый фон */
+      --ink: #2A1E17;       /* тёмный кофейный (текст) */
+      --muted: #6B5D53;     /* второстепенный текст */
+      --accent: #8C4A22;    /* карамельный акцент (кнопки) */
+      --accent-dark: #6E3816;
+      --sand: #E7DCCD;      /* блоки-подложки */
+      --line: #D6C8B7;      /* рамки */
+      --card: #FFFFFF;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 { margin: 0; }
+    p { margin: 0; }
+    a { color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .serif { font-family: 'Playfair Display', Georgia, serif; }
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ===== Кнопки ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      padding: 0 28px;
+      border-radius: 26px;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s, color .2s, transform .2s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; border: none; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+    .btn-outline:hover { background: var(--ink); color: var(--bg); }
+    .btn-small { height: 44px; padding: 0 20px; border-radius: 22px; }
+
+    /* ===== Шапка ===== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(247, 242, 235, 0.92);
+      backdrop-filter: blur(8px);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .nav { display: flex; align-items: center; gap: 24px; font-size: 15px; font-weight: 500; }
+    .nav a:not(.btn) { text-decoration: none; }
+    .nav a:not(.btn):hover { color: var(--accent); }
+    .burger {
+      display: none;
+      width: 44px; height: 44px;
+      border: none; background: transparent;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    /* ===== Первый экран ===== */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 48px;
+      padding-top: 48px;
+      padding-bottom: 96px;
+    }
+    .hero-text { flex: 1 1 420px; display: flex; flex-direction: column; gap: 24px; }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(40px, 5vw, 64px);
+      line-height: 1.1;
+      font-weight: 600;
+    }
+    .hero-lead { font-size: 18px; color: var(--muted); max-width: 480px; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 16px; }
+    .photo {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sand);
+      border-radius: 32px;
+      overflow: hidden;
+    }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-caption { position: absolute; left: 24px; bottom: 20px; font-size: 13px; color: var(--muted); }
+    .hero-photo { flex: 1 1 420px; height: 480px; }
+
+    /* ===== Преимущества (тёмный блок) ===== */
+    .about { background: var(--ink); color: var(--bg); }
+    .about .container { padding-top: 96px; padding-bottom: 96px; display: flex; flex-direction: column; gap: 48px; }
+    .features { display: flex; flex-wrap: wrap; gap: 24px; }
+    .about-photo { height: 400px; background: #3A2B22; }
+    .feature {
+      flex: 1 1 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      border-radius: var(--radius);
+      background: #3A2B22;
+    }
+    .feature h3 { font-size: 20px; font-weight: 600; }
+    .feature p { color: #D9CCBE; }
+
+    /* ===== Меню ===== */
+    .menu { padding-top: 96px; padding-bottom: 96px; display: flex; flex-direction: column; gap: 40px; }
+    .menu-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tab {
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 22px;
+      border: 1.5px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .tab:hover { border-color: var(--ink); }
+    .tab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 600; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .menu-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: var(--card);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .menu-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(42, 30, 23, 0.08); }
+    .menu-card .photo { height: 200px; border-radius: 16px; background: #EFE6DA; }
+    .menu-card .photo-caption { left: 16px; bottom: 12px; }
+    .menu-info { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 0 8px 8px; }
+    .menu-info h3 { font-size: 18px; font-weight: 600; }
+    .menu-info span { font-size: 14px; color: var(--muted); }
+    .price { font-size: 18px; font-weight: 600; white-space: nowrap; }
+
+    /* ===== Контакты и бронь ===== */
+    .contacts { padding-bottom: 96px; }
+    .contacts-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding: 24px;
+      border-radius: 32px;
+      background: var(--sand);
+    }
+    .contacts-info { flex: 1 1 360px; display: flex; flex-direction: column; gap: 24px; padding: 24px; }
+    .info-item { display: flex; flex-direction: column; gap: 4px; }
+    .info-item .value { font-size: 18px; }
+    .booking {
+      flex: 1 1 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      border-radius: var(--radius);
+      background: var(--card);
+    }
+    .booking h3 { font-size: 22px; font-weight: 600; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 14px; font-weight: 500; }
+    .field input, .field select {
+      height: 48px;
+      padding: 0 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      font: inherit;
+      color: var(--ink);
+    }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+    .row { display: flex; gap: 16px; }
+    .row .field { flex: 1; min-width: 0; }
+    .booking .btn { width: 100%; margin-top: 8px; }
+    .form-note { font-size: 13px; color: var(--muted); text-align: center; }
+
+    /* ===== Подвал ===== */
+    .footer { border-top: 1px solid #DDD0C0; }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-top: 32px;
+      padding-bottom: 32px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 24px; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ===== Анимация появления блоков ===== */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ===== Телефоны ===== */
+    @media (max-width: 760px) {
+      .burger { display: inline-flex; align-items: center; justify-content: center; }
+      .nav {
+        display: none;
+        position: absolute;
+        top: 80px; left: 0; right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 16px 24px 24px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav.open { display: flex; }
+      .nav a:not(.btn) { padding: 12px 0; font-size: 18px; }
+      .hero { padding-top: 24px; padding-bottom: 64px; gap: 32px; }
+      .hero-photo { height: 320px; }
+      .about-photo { height: 240px; }
+      .about .container, .menu { padding-top: 64px; padding-bottom: 64px; }
+      .contacts { padding-bottom: 64px; }
+      .contacts-box { padding: 12px; }
+      .contacts-info { padding: 16px; }
+      .booking { padding: 24px; }
+      .row { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Шапка ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#top" class="logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)"/><path d="M9 5c3 3 3 11 6 14"/></svg>
+        Зерно
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#menu">Меню</a>
+        <a href="#about">О нас</a>
+        <a href="#contacts">Контакты</a>
+        <a href="#booking" class="btn btn-primary btn-small">Забронировать стол</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ===== Первый экран ===== -->
+    <section class="container hero">
+      <div class="hero-text">
+        <span class="label">Кофейня и пекарня</span>
+        <h1>Кофе, ради которого хочется просыпаться</h1>
+        <p class="hero-lead">Обжариваем зерно сами, печём круассаны каждое утро и знаем, как вы любите свой капучино.</p>
+        <div class="hero-buttons">
+          <a href="#menu" class="btn btn-primary">Посмотреть меню</a>
+          <a href="#contacts" class="btn btn-outline">Как нас найти</a>
+        </div>
+      </div>
+      <div class="photo hero-photo">
+        <img src="https://images.unsplash.com/photo-1542372147193-a7aca54189cd?auto=format&fit=crop&w=1000&q=80" alt="Латте, круассан и книга на столике в кофейне">
+      </div>
+    </section>
+
+    <!-- ===== Преимущества ===== -->
+    <section class="about" id="about">
+      <div class="container">
+        <h2 class="section-title reveal">Почему к нам возвращаются</h2>
+        <div class="photo about-photo reveal">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1600&q=80" alt="Интерьер кофейни с подвесными лампами" loading="lazy">
+        </div>
+        <div class="features">
+          <div class="feature reveal">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E2B48C" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)"/><path d="M9 5c3 3 3 11 6 14"/></svg>
+            <h3>Своя обжарка</h3>
+            <p>Обжариваем небольшими партиями, поэтому кофе всегда свежий и с ярким вкусом.</p>
+          </div>
+          <div class="feature reveal">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E2B48C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15c0-5 4-9 9-9s9 4 9 9z"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <h3>Выпечка каждое утро</h3>
+            <p>Круассаны, булочки с корицей и тарты пекутся прямо здесь с семи утра.</p>
+          </div>
+          <div class="feature reveal">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E2B48C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10l8-6 8 6v10"/><path d="M10 20v-6h4v6"/></svg>
+            <h3>Уютно и тихо</h3>
+            <p>Мягкие кресла, розетки у каждого стола и быстрый Wi-Fi — можно работать весь день.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Меню ===== -->
+    <section class="container menu" id="menu">
+      <div class="menu-head">
+        <h2 class="section-title">Меню</h2>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-category="coffee" role="tab" aria-selected="true">Кофе</button>
+          <button class="tab" data-category="tea" role="tab" aria-selected="false">Чай и другое</button>
+          <button class="tab" data-category="bakery" role="tab" aria-selected="false">Выпечка</button>
+        </div>
+      </div>
+      <!-- Карточки создаются из списка MENU в скрипте внизу -->
+      <div class="menu-grid" id="menu-grid"></div>
+    </section>
+
+    <!-- ===== Контакты и бронирование ===== -->
+    <section class="container contacts" id="contacts">
+      <div class="contacts-box">
+        <div class="contacts-info">
+          <h2 class="section-title">Заходите в гости</h2>
+          <div class="info-item">
+            <span class="label">Адрес</span>
+            <span class="value">[АДРЕС КОФЕЙНИ]</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Часы работы</span>
+            <span class="value">Пн–Пт: 7:00–22:00<br>Сб–Вс: 9:00–23:00</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Телефон</span>
+            <span class="value">[ТЕЛЕФОН]</span>
+          </div>
+        </div>
+
+        <form class="booking" id="booking">
+          <h3>Забронировать стол</h3>
+          <div class="field">
+            <label for="name">Ваше имя</label>
+            <input type="text" id="name" required placeholder="Например, Анна">
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="date">Дата</label>
+              <input type="date" id="date" required>
+            </div>
+            <div class="field">
+              <label for="time">Время</label>
+              <input type="time" id="time" required min="07:00" max="22:00">
+            </div>
+          </div>
+          <div class="field">
+            <label for="guests">Сколько гостей</label>
+            <select id="guests">
+              <option>1</option>
+              <option selected>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5 и больше</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Отправить в Telegram</button>
+          <p class="form-note">Откроется Telegram с готовым сообщением</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Подвал ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="serif" style="font-size: 20px; font-weight: 700; color: var(--ink);">Зерно</span>
+      <div class="footer-links">
+        <a href="#top">Telegram</a>
+        <a href="#top">ВКонтакте</a>
+        <span>© 2026 Кофейня «Зерно»</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Настройки =====
+    // Впиши сюда Telegram-ник кофейни (без @), куда будут приходить брони
+    const TELEGRAM_USERNAME = 'Gty9qe';
+
+    // ===== Меню: меняй позиции здесь =====
+    // photo — адрес картинки. Свои фото можно положить в папку images и писать 'images/latte.jpg'
+    const IMG = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=700&q=80`;
+
+    const MENU = {
+      coffee: [
+        { name: 'Капучино', desc: 'Эспрессо и молочная пена', price: 220, photo: IMG('1497636577773-f1231844b336') },
+        { name: 'Флэт уайт', desc: 'Двойной эспрессо, меньше молока', price: 250, photo: IMG('1512568400610-62da28bc8a13') },
+        { name: 'Раф ванильный', desc: 'Сливки и натуральная ваниль', price: 280, photo: IMG('1563311977-d285756282dc') },
+        { name: 'Латте', desc: 'Мягкий и молочный', price: 230, photo: IMG('1559001724-fbad036dbc9e') },
+        { name: 'Фильтр-кофе', desc: 'Зерно недели, светлая обжарка', price: 190, photo: IMG('1593443320739-77f74939d0da') },
+        { name: 'Латте на кокосовом', desc: 'На растительном молоке', price: 260, photo: IMG('1529892485617-25f63cd7b1e9') },
+      ],
+      tea: [
+        { name: 'Матча латте', desc: 'Японский чай и молоко', price: 300, photo: IMG('1515823064-d6e0c04616a7') },
+        { name: 'Айс матча латте', desc: 'Холодный, со льдом', price: 320, photo: IMG('1717603545758-88cc454db69b') },
+        { name: 'Матча в пиале', desc: 'Классическая, взбитая венчиком', price: 280, photo: IMG('1589698272390-0501a07619bb') },
+      ],
+      bakery: [
+        { name: 'Круассан', desc: 'Классический, на сливочном масле', price: 160, photo: IMG('1565182363525-f95648bbeee0') },
+        { name: 'Синнабон', desc: 'Булочка с корицей и кремом', price: 190, photo: IMG('1530006261244-0ae043004358') },
+        { name: 'Тарт с ягодами', desc: 'Песочное тесто и сезонные ягоды', price: 260, photo: IMG('1702742322469-36315505728f') },
+        { name: 'Пан о шоколя', desc: 'Слоёное тесто и бельгийский шоколад', price: 180, photo: IMG('1597528662465-55ece5734101') },
+      ],
+    };
+
+    // ===== Отрисовка меню =====
+    const grid = document.getElementById('menu-grid');
+
+    function renderMenu(category) {
+      grid.innerHTML = MENU[category].map(item => `
+        <div class="menu-card">
+          <div class="photo">
+            <img src="${item.photo}" alt="${item.name}" loading="lazy">
+          </div>
+          <div class="menu-info">
+            <div>
+              <h3>${item.name}</h3>
+              <span>${item.desc}</span>
+            </div>
+            <div class="price">${item.price} ₽</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        renderMenu(tab.dataset.category);
+      });
+    });
+
+    renderMenu('coffee');
+
+    // ===== Мобильное меню (бургер) =====
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('nav');
+
+    burger.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Закрываем меню после клика по ссылке
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ===== Бронирование через Telegram =====
+    // Нельзя выбрать прошедшую дату
+    document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+    document.getElementById('booking').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const date = document.getElementById('date').value.split('-').reverse().join('.');
+      const time = document.getElementById('time').value;
+      const guests = document.getElementById('guests').value;
+
+      const text = `Здравствуйте! Хочу забронировать стол.\nИмя: ${name}\nДата: ${date}\nВремя: ${time}\nГостей: ${guests}`;
+      window.open(`https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(text)}`, '_blank');
+    });
+
+    // ===== Плавное появление блоков при прокрутке =====
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
